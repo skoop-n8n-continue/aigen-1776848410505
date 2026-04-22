@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skoop Wiki Signage - Digital Pulse</title>
+    <style>
+        :root {
+            --primary: #00b7af;
+            --dark: #10181f;
+            --darker: #080c10;
+            --gray: #6a7071;
+            --white: #ffffff;
+            --glow: rgba(0, 183, 175, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--white);
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Background Pulse Effect */
+        .pulse-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            animation: pulse-animation 8s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-animation {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.6; }
+        }
+
+        /* Header */
+        header {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 80px;
+            background: rgba(16, 24, 31, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 30px var(--glow);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-dot {
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .header-meta {
+            text-align: right;
+            color: var(--gray);
+        }
+
+        .time {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .date {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Main Grid */
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            padding: 60px 80px;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Wiki Card */
+        .card {
+            background: rgba(16, 24, 31, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .wiki-section {
+            display: none;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .wiki-section.active {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-tag {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 30px;
+        }
+
+        .section-content {
+            font-size: 28px;
+            line-height: 1.6;
+            color: #d1d5db;
+        }
+
+        .icon-box {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--primary);
+        }
+
+        .icon-box span {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        /* Feature Grid Side */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .stat-card {
+            background: rgba(16, 24, 31, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 183, 175, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer / Ticker */
+        footer {
+            height: 100px;
+            background: var(--dark);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .ticker-label {
+            height: 100%;
+            padding: 0 40px;
+            background: var(--primary);
+            color: var(--darker);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            white-space: nowrap;
+            z-index: 11;
+        }
+
+        .ticker-wrapper {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-content {
+            display: flex;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+
+        .ticker-item {
+            padding: 0 60px;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ticker-item::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 32px;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="pulse-bg"></div>
+
+    <header>
+        <div class="logo">
+            <div class="logo-dot"></div>
+            SKOOP
+        </div>
+        <div class="header-meta">
+            <div class="time" id="clock">12:00:00</div>
+            <div class="date" id="date">Wednesday, April 22, 2026</div>
+        </div>
+    </header>
+
+    <main>
+        <div class="card" id="wiki-card">
+            <div class="wiki-section active" data-duration="10000">
+                <div class="section-tag">About Skoop</div>
+                <div class="section-title">Supercharging Digital Signage</div>
+                <div class="section-content">
+                    Skoop drastically improves your customer experience, automatically updates inventory, improves the effectiveness of promotions, highlights products and moves stale inventory with ease.
+                </div>
+                <div class="icon-box">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/zap.svg" alt="Zap" width="32" height="32" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                    <span>Advanced Automation</span>
+                </div>
+            </div>
+
+            <div class="wiki-section" data-duration="8000">
+                <div class="section-tag">New Partnership</div>
+                <div class="section-title">Skoop x Amazon</div>
+                <div class="section-content">
+                    Skoop has partnered with Amazon to power Amazon’s new signage stick! This collaboration brings enterprise-grade signage software to the world's most accessible hardware.
+                </div>
+                <div class="icon-box">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/award.svg" alt="Award" width="32" height="32" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                    <span>Strategic Innovation</span>
+                </div>
+            </div>
+
+            <div class="wiki-section" data-duration="8000">
+                <div class="section-tag">Features</div>
+                <div class="section-title">AI Agents & Design Studio</div>
+                <div class="section-content">
+                    Create stunning, dynamic signage that captures attention and drives engagement. Use AI Agents to automate your content strategy and POS integration to keep data fresh.
+                </div>
+                <div class="icon-box">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/cpu.svg" alt="CPU" width="32" height="32" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                    <span>Modern Intelligence</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="wiki-progress"></div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/globe.svg" alt="Globe" width="40" height="40" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                </div>
+                <div class="stat-value">10+</div>
+                <div class="stat-label">Industries Served</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/layout.svg" alt="Layout" width="40" height="40" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                </div>
+                <div class="stat-value">Live</div>
+                <div class="stat-label">Design Studio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/link-2.svg" alt="Link" width="40" height="40" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                </div>
+                <div class="stat-value">Sync</div>
+                <div class="stat-label">POS Connectivity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="https://unpkg.com/lucide-static@latest/icons/users.svg" alt="Users" width="40" height="40" style="filter: invert(53%) sepia(99%) saturate(3025%) hue-rotate(143deg) brightness(98%) contrast(101%);">
+                </div>
+                <div class="stat-value">Top Tier</div>
+                <div class="stat-label">Partner Network</div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="ticker-label">INDUSTRIES</div>
+        <div class="ticker-wrapper">
+            <div class="ticker-content" id="industry-ticker">
+                <!-- Ticker items will be duplicated for seamless loop -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Clock & Date
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const date = now.toLocaleDateString('en-US', dateOptions);
+
+            document.getElementById('clock').textContent = time;
+            document.getElementById('date').textContent = date;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Industry Ticker
+        const industries = [
+            "Dispensary", "Transportation", "Sports & Entertainment", "Retail",
+            "Education", "Restaurant", "Convenience", "Office",
+            "Healthcare", "Digital Out of Home"
+        ];
+
+        const ticker = document.getElementById('industry-ticker');
+        const tickerItems = industries.concat(industries).map(ind => `
+            <div class="ticker-item">${ind.toUpperCase()}</div>
+        `).join('');
+        ticker.innerHTML = tickerItems;
+
+        // Wiki Rotation
+        const sections = document.querySelectorAll('.wiki-section');
+        const progress = document.getElementById('wiki-progress');
+        let currentSection = 0;
+        let startTime = Date.now();
+
+        function rotateWiki() {
+            const section = sections[currentSection];
+            const duration = parseInt(section.getAttribute('data-duration'));
+            const elapsed = Date.now() - startTime;
+            const percent = Math.min((elapsed / duration) * 100, 100);
+
+            progress.style.width = percent + '%';
+
+            if (elapsed >= duration) {
+                sections[currentSection].classList.remove('active');
+                currentSection = (currentSection + 1) % sections.length;
+                sections[currentSection].classList.add('active');
+                startTime = Date.now();
+                progress.style.width = '0%';
+            }
+
+            requestAnimationFrame(rotateWiki);
+        }
+
+        rotateWiki();
+    </script>
+</body>
+</html>
